@@ -1,5 +1,6 @@
 // This file contains default constants of the application.
 export const OOYALA_API_URL = 'https://api.ooyala.com';
+export const DEFAULT_PAGE_SIZE = 1000;
 export const IS_INCREMENTAL = false;
 export const EVENT_ERROR = 'error';
 export const EVENT_FINISH = 'finish';

@@ -10,12 +10,14 @@ import {
   isNull,
   isEmpty,
   isArray,
+  isNumber,
   isUndefined
 } from 'lodash';
 import {
   EVENT_ERROR,
   EVENT_FINISH,
   IS_INCREMENTAL,
+  DEFAULT_PAGE_SIZE,
   DEFAULT_BUCKET_NAME,
   DEFAULT_REPORT_TYPE
 } from '../constants';
@@ -42,6 +44,11 @@ export async function parseConfiguration(configObject) {
     const bucket = configObject.get('parameters:bucket') || DEFAULT_BUCKET_NAME;
     // Specification of the parameter table.
     const table = configObject.get('parameters:table') || DEFAULT_REPORT_TYPE;
+    // Parse page size
+    const pageSize = configObject.get('parameters:pageSize') || DEFAULT_PAGE_SIZE;
+    if (!isNumber(pageSize)) {
+      reject('Invalid pageSize parameter! Please specify a numeric value.');
+    }
     // Read the dimensions parameter.
     const dimensionsInput = configObject.get('parameters:dimensions');
     if (isUndefined(dimensionsInput) || !isArray(dimensionsInput)) {
@@ -60,6 +67,7 @@ export async function parseConfiguration(configObject) {
       apiKey,
       bucket,
       endDate,
+      pageSize,
       startDate,
       apiSecret,
       reportType,

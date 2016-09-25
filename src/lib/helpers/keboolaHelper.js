@@ -18,6 +18,7 @@ import {
   EVENT_FINISH,
   IS_INCREMENTAL,
   DEFAULT_PAGE_SIZE,
+  DEFAULT_START_DATE,
   DEFAULT_BUCKET_NAME,
   DEFAULT_REPORT_TYPE
 } from '../constants';
@@ -59,8 +60,20 @@ export async function parseConfiguration(configObject) {
       ? join(dimensionsInput, ',')
       : '';
     // Read date information.
-    const startDate = configObject.get('parameters:startDate');
-    const endDate = configObject.get('parameters:endDate');
+    const maximalDate = moment.utc().subtract(1, "days").format("YYYY-MM-DD");
+    const startDate = configObject.get('parameters:startDate') || DEFAULT_START_DATE;
+    const endDate = configObject.get('parameters:endDate') || maximalDate;
+
+    // Verify whether an input date are inserted in proper order.
+    if (moment(endDate, "YYYY-MM-DD").diff(moment(startDate, "YYYY-MM-DD")) <= 0) {
+      reject(`Parameter endDate ${endDate} is older than or equal to startDate ${startDate}! Please check out the documentation for more information.`);
+    }
+
+    // Verify whether endDate is not older than today() - 1.
+    if (moment(endDate, "YYYY-MM-DD").diff(maximalDate) > 0) {
+      reject(`Parameter endDate ${endDate} is bigger than maximal allowed date value ${maximalDate}! Please check out the documentation for more information.`);
+    }
+
     // Prepare the output object.
     resolve({
       table,

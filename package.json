@@ -14,7 +14,7 @@
     "Analytics",
     "Keboola"
   ],
-  "author": "Radek Tomasek <radek@bluesky.pro>",
+  "author": "Radek Tomasek <radek.tomasek@gmail.com>",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/blueskydigital/keboola-ex-ooyala/issues"
@@ -28,6 +28,16 @@
     "babel-preset-stage-0": "^6.5.0"
   },
   "dependencies": {
-    "babel-polyfill": "^6.9.1"
+    "babel-polyfill": "^6.9.1",
+    "commander": "^2.9.0",
+    "fast-csv": "^2.2.0",
+    "is-there": "^4.3.3",
+    "jsonfile": "^2.4.0",
+    "lodash": "^4.13.1",
+    "moment": "^2.14.1",
+    "nconf": "^0.8.4",
+    "ooyala-api": "^0.4.3",
+    "request-promise": "^4.0.0",
+    "urlencode": "^1.1.0"
   }
 }

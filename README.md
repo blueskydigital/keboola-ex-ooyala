@@ -4,7 +4,7 @@ An Ooyala Analytics extractor for Keboola Connection is a component that extract
 
 ## General overview
 
-The main purpose of this extractor is to download data from ([v3 Analytics (Ooyala IQ) API](http://support.ooyala.com/developers/documentation/concepts/ooyala_iq_api_reference.html)). You can specify several dimensions which produce results for the all metrics that are available in Ooyala analytical system.
+The main purpose of this extractor is to download data from [v3 Analytics (Ooyala IQ) API](http://support.ooyala.com/developers/documentation/concepts/ooyala_iq_api_reference.html). You can specify several dimensions which produce results for the all metrics that are available in Ooyala analytical system.
 
 In the current version of the extractor you can't modify these metrics as well as apply any special filter on data. All you can currently do is to specify parameters startDate, endDate and dimensions and let the extractor download everything within that period and dimension.
 
@@ -22,7 +22,7 @@ General syntax of Reporting GET which is implemented in this extractor:
 
 ### Dimensions
 
-You can specify up to 3 dimensions. The allowed values are: **asset**, **country**, **region**, **dma**, **state**, **device_type**, **domain**, **url**, **os**, **browser**, **pcode**, **player_id**. Check out ([the documentation](http://support.ooyala.com/developers/documentation/api/analytics_v3_api_reporting_dimensions.html)) for more information.
+You can specify up to 3 dimensions. The allowed values are: **asset**, **country**, **region**, **dma**, **state**, **device_type**, **domain**, **url**, **os**, **browser**, **pcode**, **player_id**. Check out [the documentation](http://support.ooyala.com/developers/documentation/api/analytics_v3_api_reporting_dimensions.html) for more information.
 
 ### Dates
 

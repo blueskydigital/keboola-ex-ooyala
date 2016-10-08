@@ -49,7 +49,6 @@ import {
     const expires = getExpiresTimestamp(EXPIRATION_TIME);
     const {
       fileName,
-      destination,
       incremental,
       manifestFileName
     } = getKeboolaStorageMetadata(dataOutDir, reportType);
@@ -73,7 +72,7 @@ import {
     } while (hasNext);
 
     const manifest = isThere(fileName)
-      ? await createManifestFile(manifestFileName, { destination, incremental })
+      ? await createManifestFile(manifestFileName, { incremental })
       : null;
     const outputMessage = !isNull(manifest)
       ? 'Data from Ooyala Analytics extracted!'

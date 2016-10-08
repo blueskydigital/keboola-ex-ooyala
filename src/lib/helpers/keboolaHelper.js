@@ -17,7 +17,6 @@ import {
   EVENT_ERROR,
   EVENT_FINISH,
   IS_INCREMENTAL,
-  DEFAULT_BUCKET,
   DEFAULT_PAGE_SIZE,
   DEFAULT_START_DATE,
   DEFAULT_REPORT_TYPE,
@@ -28,9 +27,9 @@ import {
  * Check whether the required fields are provided.
  * Prepare simple output that is going to be used in later phases.
  */
-export async function parseConfiguration(configObject) {
+export function parseConfiguration(configObject) {
   return new Promise((resolve, reject) => {
-    // We need to read #api_key and #api_secret.
+    // We need to read #apiKey and #apiSecret.
     // If neither of them is specified, we need to stop the extractor.
     const apiKey = configObject.get('parameters:#apiKey');
     const apiSecret = configObject.get('parameters:#apiSecret');
@@ -95,10 +94,9 @@ export async function parseConfiguration(configObject) {
  */
 export function getKeboolaStorageMetadata(tableOutDir, tableName) {
   const incremental = IS_INCREMENTAL;
-  const destination = `${DEFAULT_BUCKET}.${tableName}`;
   const fileName = `${tableOutDir}/${tableName}.csv`;
   const manifestFileName = `${fileName}.manifest`;
-  return { destination, fileName, incremental, manifestFileName };
+  return { fileName, incremental, manifestFileName };
 }
 
 /**

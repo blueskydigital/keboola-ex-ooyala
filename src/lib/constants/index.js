@@ -11,4 +11,5 @@ export const INPUT_TABLES_DIR = '/in/tables';
 export const OUTPUT_TABLES_DIR = '/out/tables';
 export const CONFIG_FILE = 'config.json';
 export const EXPIRATION_TIME = 120;
+export const DEFAULT_BUCKET = 'out.c-ooyala';
 export const DEFAULT_TIME_SEGMENT = 'month';

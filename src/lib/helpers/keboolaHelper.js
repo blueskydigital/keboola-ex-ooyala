@@ -17,6 +17,7 @@ import {
   EVENT_ERROR,
   EVENT_FINISH,
   IS_INCREMENTAL,
+  DEFAULT_BUCKET,
   DEFAULT_PAGE_SIZE,
   DEFAULT_START_DATE,
   DEFAULT_REPORT_TYPE,
@@ -94,9 +95,10 @@ export async function parseConfiguration(configObject) {
  */
 export function getKeboolaStorageMetadata(tableOutDir, tableName) {
   const incremental = IS_INCREMENTAL;
+  const destination = `${DEFAULT_BUCKET}.${tableName}`;
   const fileName = `${tableOutDir}/${tableName}.csv`;
   const manifestFileName = `${fileName}.manifest`;
-  return { fileName, incremental, manifestFileName };
+  return { destination, fileName, incremental, manifestFileName };
 }
 
 /**

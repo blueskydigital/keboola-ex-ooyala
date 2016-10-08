@@ -19,8 +19,8 @@ import {
   IS_INCREMENTAL,
   DEFAULT_PAGE_SIZE,
   DEFAULT_START_DATE,
-  DEFAULT_BUCKET_NAME,
-  DEFAULT_REPORT_TYPE
+  DEFAULT_REPORT_TYPE,
+  DEFAULT_TIME_SEGMENT
 } from '../constants';
 /**
  * This function check the input configuration specified in KBC.
@@ -41,10 +41,6 @@ export async function parseConfiguration(configObject) {
     if (reportType.toLowerCase() !== DEFAULT_REPORT_TYPE) {
       reject('Invalid report_type parameter. Please check out the documentation for more information.');
     }
-    // Specification of the parameter bucket.
-    const bucket = configObject.get('parameters:bucket') || DEFAULT_BUCKET_NAME;
-    // Specification of the parameter table.
-    const table = configObject.get('parameters:table') || DEFAULT_REPORT_TYPE;
     // Parse page size
     const pageSize = configObject.get('parameters:pageSize') || DEFAULT_PAGE_SIZE;
     if (!isNumber(pageSize)) {
@@ -60,6 +56,10 @@ export async function parseConfiguration(configObject) {
       ? join(dimensionsInput, ',')
       : '';
     // Read date information.
+    const timeSegment = configObject.get('parameters:timeSegment') || DEFAULT_TIME_SEGMENT;
+    if (!timeSegment.match(/month|week|day|hour|15min/)) {
+      reject('Invalid time segment parameter. Only values: "month", "week", "day", "hour" or "15min" are allowed. Check out the documentation for more information');
+    }
     const maximalDate = moment.utc().subtract(1, "days").format("YYYY-MM-DD");
     const startDate = configObject.get('parameters:startDate') || DEFAULT_START_DATE;
     const endDate = configObject.get('parameters:endDate') || maximalDate;
@@ -76,15 +76,14 @@ export async function parseConfiguration(configObject) {
 
     // Prepare the output object.
     resolve({
-      table,
       apiKey,
-      bucket,
       endDate,
       pageSize,
       startDate,
       apiSecret,
+      dimensions,
       reportType,
-      dimensions
+      timeSegment
     });
   });
 }
@@ -93,12 +92,11 @@ export async function parseConfiguration(configObject) {
  * This function prepares object containing metadata required for writing
  * output data into Keboola (output files & manifests).
  */
-export function getKeboolaStorageMetadata(tableOutDir, bucketName, tableName) {
+export function getKeboolaStorageMetadata(tableOutDir, tableName) {
   const incremental = IS_INCREMENTAL;
-  const destination = `${bucketName}.${tableName}`;
   const fileName = `${tableOutDir}/${tableName}.csv`;
   const manifestFileName = `${fileName}.manifest`;
-  return { tableName, fileName, incremental, destination, manifestFileName };
+  return { fileName, incremental, manifestFileName };
 }
 
 /**

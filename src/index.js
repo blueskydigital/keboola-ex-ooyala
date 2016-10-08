@@ -6,7 +6,8 @@ import { getConfig } from './lib/helpers/configHelper';
 import {
   size,
   first,
-  isNull
+  isNull,
+  flatten
 } from 'lodash';
 import {
   CONFIG_FILE,
@@ -16,6 +17,7 @@ import {
 import {
   getOoyalaUri,
   parseDataArray,
+  processOoyalaResult,
   getExpiresTimestamp
 } from './lib/helpers/ooyalaHelper';
 import {
@@ -34,7 +36,6 @@ import {
     const dataOutDir = path.join(dataDir, OUTPUT_TABLES_DIR);
     // Read the input configuration.
     const {
-      table,
       apiKey,
       bucket,
       endDate,
@@ -42,36 +43,36 @@ import {
       startDate,
       apiSecret,
       reportType,
-      dimensions
+      dimensions,
+      timeSegment
     } = await parseConfiguration(getConfig(path.join(dataDir, CONFIG_FILE)));
     const expires = getExpiresTimestamp(EXPIRATION_TIME);
     const {
       fileName,
-      tableName,
       incremental,
-      destination,
       manifestFileName
-    } = getKeboolaStorageMetadata(dataOutDir, bucket, table);
+    } = getKeboolaStorageMetadata(dataOutDir, reportType);
 
     let hasNext = true;
     let page = 0;
     do {
       const uri = getOoyalaUri({
-        page, apiKey, expires, endDate, pageSize,
-        startDate, dimensions, reportType, apiSecret
+        apiKey, expires, endDate, pageSize, timeSegment,
+        startDate, dimensions, reportType, apiSecret, page
       });
       const options = { uri, json: true };
       const result = await request(options);
-      const data = first(result['results'])['data'];
-      const output = size(data) > 0
-        ? await createOutputFile(fileName, parseDataArray(data, startDate, endDate))
-        : null;
+      const data = result['results'];
+      if (size(data) > 0) {
+        const test = flatten(processOoyalaResult(data, timeSegment));
+        const output = createOutputFile(fileName, test);
+      }
       ++page;
       hasNext = result.result_count === pageSize;
     } while (hasNext);
 
     const manifest = isThere(fileName)
-      ? await createManifestFile(manifestFileName, { destination, incremental })
+      ? await createManifestFile(manifestFileName, { incremental })
       : null;
     const outputMessage = !isNull(manifest)
       ? 'Data from Ooyala Analytics extracted!'

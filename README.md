@@ -30,7 +30,11 @@ There are two date parameters, **startDate** and **endDate**. They help you to d
 
 ### Bucket name and table name
 
-There are also parameters **bucket** and **table**. There are pointing out to Keboola destination where the output object is going to be stored. They are optional as well. If you don't specify them, the default values will be used. In default mode, **bucket** is going to be set to **out.c-ooyala** and **table** to **performance**.
+The current version of the extractor is set to store output to a default bucket name based on the Keboola configuration. The filename is going to be called **performance**.
+
+### Time segments
+
+You can specify the grain of the data result. There is a special parameter for that called **timeSegment**. The valid values are: **month**, **week**, **day**, **hour** or **15min**. If you don't specify this parameter, the **month** value is used. 
 
 ### Pagination
 
@@ -43,9 +47,8 @@ A possible configuration in Keboola Connection might look like following:
     {
       "#apiKey": "Ooyala Api Key",
       "#apiSecret": "Ooyala Api Secret",
-      "bucket": "out.c-radek_test",
-      "table": "ooyala_test",
       "dimensions": [ "asset", "country" ],
+      "timeSegment": "month",
       "startDate": "2016-09-25",
       "endDate": "2016-09-25",
       "pageSize": 500

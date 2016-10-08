@@ -44,14 +44,24 @@ export function extractNumbersAndStrings(data) {
 }
 
 /**
+ * This function iterates over the result dataset and create output suitable for csv output
+ */
+export function processOoyalaResult(dataset, timeSegment) {
+  return dataset.map(record => {
+    const { data, start_date: startDate, end_date: endDate } = record;
+    return parseDataArray(data, startDate, endDate, timeSegment);
+  });
+}
+
+/**
  *  This function parses data array coming from Ooyala Response.
  */
-export function parseDataArray(data, startDate, endDate) {
+export function parseDataArray(data, startDate, endDate, timeSegment) {
   return data
     .map(element => {
       const group = extractNumbersAndStrings(element.group);
       const metrics = extractNumbersAndStrings(element.metrics);
-      return Object.assign({}, { start_date: startDate, end_date: endDate }, group, metrics);
+      return Object.assign({}, { start_date: startDate, end_date: endDate, time_segment: timeSegment }, group, metrics);
     });
 }
 
@@ -72,8 +82,9 @@ export function getOoyalaParameters({
   endDate,
   pageSize,
   startDate,
+  reportType,
   dimensions,
-  reportType
+  timeSegment
 }) {
   return Object.assign({}, {
     page: page,
@@ -83,7 +94,8 @@ export function getOoyalaParameters({
     end_date: endDate,
     start_date: startDate,
     dimensions: dimensions,
-    report_type: reportType
+    report_type: reportType,
+    time_segment: timeSegment
   });
 }
 
@@ -98,12 +110,13 @@ export function getOoyalaUri({
   pageSize,
   apiSecret,
   startDate,
+  reportType,
   dimensions,
-  reportType
+  timeSegment
 }) {
   const ooyalaParams = getOoyalaParameters({
     page, apiKey, expires, endDate, pageSize,
-    startDate, dimensions, reportType
+    startDate, dimensions, reportType, timeSegment
   });
   return `${OOYALA_API_URL}/v3/analytics/reports?` +
     `report_type=${reportType}` +
@@ -111,6 +124,7 @@ export function getOoyalaUri({
     `&end_date=${endDate}` +
     `&dimensions=${dimensions}` +
     `&limit=${pageSize}` +
+    `&time_segment=${timeSegment}` +
     `&page=${page}` +
     `&api_key=${apiKey}` +
     `&expires=${expires}`+

@@ -60,9 +60,13 @@ export function parseConfiguration(configObject) {
     if (!timeSegment.match(/month|week|day|hour|15min/)) {
       reject('Invalid time segment parameter. Only values: "month", "week", "day", "hour" or "15min" are allowed. Check out the documentation for more information');
     }
-    const maximalDate = moment.utc().subtract(1, "days").format("YYYY-MM-DD");
-    const startDate = configObject.get('parameters:startDate') || DEFAULT_START_DATE;
-    const endDate = configObject.get('parameters:endDate') || maximalDate;
+    const maximalDate = moment.utc().subtract(1, "days").format(DEFAULT_DATE_MASK);
+    const startDate = isUndefined(configObject.get('parameters:startDate')) || isEmpty(configObject.get('parameters:startDate'))
+      ? DEFAULT_START_DATE
+      : configObject.get('parameters:startDate');
+    const endDate = isUndefined(configObject.get('parameters:endDate')) || isEmpty(configObject.get('parameters:endDate'))
+      ? maximalDate
+      : configObject.get('parameters:endDate');
 
     // Verify whether an input date are inserted in proper order.
     if (moment(endDate, "YYYY-MM-DD").diff(moment(startDate, "YYYY-MM-DD")) <= 0) {

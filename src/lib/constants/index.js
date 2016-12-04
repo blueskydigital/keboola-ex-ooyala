@@ -1,6 +1,7 @@
 // This file contains default constants of the application.
 export const OOYALA_API_URL = 'https://api.ooyala.com';
 export const DEFAULT_START_DATE = '2016-01-01';
+export const DEFAULT_DATE_MASK = 'YYYY-MM-DD';
 export const DEFAULT_PAGE_SIZE = 1000;
 export const IS_INCREMENTAL = false;
 export const EVENT_ERROR = 'error';
